@@ -26,7 +26,7 @@ export default function Overview() {
   const [windUnit, setWindUnit] = useState("km/h");
   const [precipUnit, setPrecipUnit] = useState("Millimeters (mm)");
 
-  const API_KEY = "fbf301091b4db93438c447e2f250c572";
+  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
   /* ------------------- Detect User Location ------------------- */
   useEffect(() => {

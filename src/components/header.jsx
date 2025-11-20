@@ -13,7 +13,7 @@ export default function Header({
       <img
         src="/assets/images/logo.svg"
         alt="Weather Now Logo"
-        className="w-40"
+        className="w-40 cursor-pointer"
       />
       <UnitsDropdown
         temperatureUnit={temperatureUnit}
