@@ -47,7 +47,7 @@ export default function Overview() {
       },
       (err) => console.warn("Geolocation permission denied:", err)
     );
-  }, [locationMode]);
+  }, [locationMode, API_KEY]);
 
   /* ------------------- Fetch Current Weather ------------------- */
   const fetchWeather = useCallback(async () => {
@@ -231,7 +231,7 @@ export default function Overview() {
     } finally {
       setLoading(false);
     }
-  }, [city, temperatureUnit, windUnit, precipUnit]);
+  }, [city, temperatureUnit, windUnit, precipUnit, API_KEY]);
 
   /* ------------------- Fetch Forecast ------------------- */
   const fetchForecast = useCallback(async () => {
@@ -301,7 +301,7 @@ export default function Overview() {
     } catch (err) {
       console.error(err);
     }
-  }, [city, temperatureUnit]);
+  }, [city, temperatureUnit, API_KEY]);
 
   const hoursForSelectedDay = (hourlyForecast[selectedDay] || []).map(
     (item) => ({
