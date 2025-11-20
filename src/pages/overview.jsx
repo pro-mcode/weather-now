@@ -10,9 +10,8 @@ import ApiError from "./api-error";
 import { COUNTRY_NAMES } from "../components/country-names";
 
 export default function Overview() {
-  const [city, setCity] = useState(""); // will be set via geolocation fallback
-  const [lat, setLat] = useState(null);
-  const [lon, setLon] = useState(null);
+  const [city, setCity] = useState("atlanta"); // will be set via geolocation fallback
+  const [locationMode, setLocationMode] = useState("geo"); // geo or manual
   const [temp, setTemp] = useState(null);
   const [weather, setWeather] = useState(null);
   const [dailyForecast, setDailyForecast] = useState([]);
@@ -28,38 +27,38 @@ export default function Overview() {
 
   const API_KEY = "fbf301091b4db93438c447e2f250c572";
 
-  /* ------------------- Geolocation ------------------- */
+  /* ------------------- Detect User Location ------------------- */
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLat(position.coords.latitude);
-          setLon(position.coords.longitude);
-        },
-        (error) => {
-          console.warn("Geolocation error:", error);
-          setCity("Atlanta"); // fallback
+    if (locationMode !== "geo") return;
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
+          );
+          const data = await res.json();
+          setCity(data.name); // set city to detected location
+        } catch (err) {
+          console.warn("Geolocation failed:", err);
         }
-      );
-    } else {
-      console.warn("Geolocation not supported, using default city");
-      setCity("Atlanta");
-    }
-  }, []);
+      },
+      (err) => console.warn("Geolocation permission denied:", err)
+    );
+  }, [locationMode]);
 
   /* ------------------- Fetch Current Weather ------------------- */
   const fetchWeather = useCallback(async () => {
+    if (!city) return;
     setLoading(true);
     setInvalidCity(false);
     setApiError(false);
 
-    const weatherUrl =
-      lat && lon
-        ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
-        : `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
-
     try {
-      const res = await fetch(weatherUrl);
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      );
 
       if (!res.ok) {
         if (res.status === 404) setInvalidCity(true);
@@ -231,18 +230,16 @@ export default function Overview() {
     } finally {
       setLoading(false);
     }
-  }, [city, lat, lon, temperatureUnit, windUnit, precipUnit]);
+  }, [city, temperatureUnit, windUnit, precipUnit]);
 
   /* ------------------- Fetch Forecast ------------------- */
   const fetchForecast = useCallback(async () => {
-    const forecastUrl =
-      lat && lon
-        ? `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
-        : `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+    if (!city) return;
 
     try {
-      const res = await fetch(forecastUrl);
-      if (!res.ok) throw new Error("Forecast API error");
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`
+      );
 
       // if (!res.ok) throw new Error("Forecast API error");
 
@@ -303,7 +300,7 @@ export default function Overview() {
     } catch (err) {
       console.error(err);
     }
-  }, [city, lat, lon, temperatureUnit]);
+  }, [city, temperatureUnit]);
 
   const hoursForSelectedDay = (hourlyForecast[selectedDay] || []).map(
     (item) => ({
@@ -318,16 +315,20 @@ export default function Overview() {
 
   /* ------------------- Initial Fetch ------------------- */
   useEffect(() => {
-    if (lat || city) {
-      fetchWeather();
-      fetchForecast();
-    }
-  }, [lat, lon, city, fetchWeather, fetchForecast]);
+    fetchWeather();
+    fetchForecast();
+  }, [fetchWeather, fetchForecast]);
 
   /* ------------------- Retry Handler ------------------- */
   const handleRetry = () => {
     fetchWeather();
     fetchForecast();
+  };
+
+  /* ------------------- Search Handler ------------------- */
+  const handleCityChange = (newCity) => {
+    setLocationMode("manual"); // switch from geo to manual
+    setCity(newCity);
   };
 
   /* ------------------- Prepare Elements ------------------- */
@@ -347,7 +348,7 @@ export default function Overview() {
         setWindUnit={setWindUnit}
         setPrecipUnit={setPrecipUnit}
       />
-      <SearchBar onCityChange={setCity} />
+      <SearchBar onCityChange={handleCityChange} />
       {invalidCity && <NoResult />}
       {apiError && <ApiError message={apiError} onRetry={handleRetry} />}
 

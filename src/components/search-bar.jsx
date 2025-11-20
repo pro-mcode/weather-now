@@ -31,7 +31,7 @@ export default function SearchBar({ onCityChange }) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Enter city, zip code or state"
-              className="flex-1 bg-transparent text-white text-sm outline-none"
+              className="flex-1 bg-transparent text-white text-base outline-none"
             />
           </div>
         </div>
