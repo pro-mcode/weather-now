@@ -1,0 +1,7 @@
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: hsl(243, 96%, 9%);
+  font-family: "Bricolage Grotesque", sans-serif;
+}
