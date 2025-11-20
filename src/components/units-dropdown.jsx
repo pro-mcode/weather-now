@@ -193,7 +193,7 @@ export default function UnitsDropdown({
       {/* BUTTON */}
       <button
         onClick={toggleDropdown}
-        className="flex justify-between items-center gap-x-4 px-4 py-2 outline-none focus:outline-none focus:ring focus:ring-primary bg-primary-600 text-white rounded-md hover:opacity-80 shadow-md dark:bg-primary-700 cursor-pointer"
+        className="flex justify-between items-center gap-x-3 px-4 py-2 outline-none focus:outline-none focus:ring focus:ring-primary bg-primary-600 text-white rounded-md hover:opacity-80 shadow-md dark:bg-primary-700 cursor-pointer"
       >
         <img src="/assets/images/icon-units.svg" alt="" />
         Units

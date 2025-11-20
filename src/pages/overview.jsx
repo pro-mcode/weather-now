@@ -339,45 +339,47 @@ export default function Overview() {
 
   /* ------------------- Render ------------------- */
   return (
-    <div className="w-full max-w-[650px] mx-auto py-12 px-4 md:px-6 md:max-w-[1220px]">
-      <Header
-        temperatureUnit={temperatureUnit}
-        windUnit={windUnit}
-        precipUnit={precipUnit}
-        setTemperatureUnit={setTemperatureUnit}
-        setWindUnit={setWindUnit}
-        setPrecipUnit={setPrecipUnit}
-      />
-      <SearchBar onCityChange={handleCityChange} />
-      {invalidCity && <NoResult />}
-      {apiError && <ApiError message={apiError} onRetry={handleRetry} />}
+    <div className="flex flex-col justify-between min-h-screen w-full max-w-[650px] mx-auto pt-12 pb-8 px-4 md:px-6 md:max-w-[1220px] ">
+      <div>
+        <Header
+          temperatureUnit={temperatureUnit}
+          windUnit={windUnit}
+          precipUnit={precipUnit}
+          setTemperatureUnit={setTemperatureUnit}
+          setWindUnit={setWindUnit}
+          setPrecipUnit={setPrecipUnit}
+        />
+        <SearchBar onCityChange={handleCityChange} />
+        {invalidCity && <NoResult />}
+        {apiError && <ApiError message={apiError} onRetry={handleRetry} />}
 
-      {!invalidCity && !apiError && (
-        <div className="relative grid gap-4 grid-cols-1 md:grid-cols-3">
-          <Location
-            city={temp?.cityName}
-            country={temp?.country}
-            elements={elements}
-            temperature={temp?.Temperature}
-            icon={temp?.Icon}
-            loading={loading}
-            timezone={temp?.timezone}
-          />
-          {/* Weather details */}
-          <WeatherElements elements={elements} loading={loading} />
+        {!invalidCity && !apiError && (
+          <div className="relative grid gap-4 grid-cols-1 md:grid-cols-3">
+            <Location
+              city={temp?.cityName}
+              country={temp?.country}
+              elements={elements}
+              temperature={temp?.Temperature}
+              icon={temp?.Icon}
+              loading={loading}
+              timezone={temp?.timezone}
+            />
+            {/* Weather details */}
+            <WeatherElements elements={elements} loading={loading} />
 
-          {/* Forecasts */}
-          <DailyForecast dailyForecast={dailyForecast} loading={loading} />
-          <HourlyForecast
-            city={city}
-            loading={loading}
-            days={days}
-            selectedDay={selectedDay}
-            setSelectedDay={setSelectedDay}
-            hoursForSelectedDay={hoursForSelectedDay}
-          />
-        </div>
-      )}
+            {/* Forecasts */}
+            <DailyForecast dailyForecast={dailyForecast} loading={loading} />
+            <HourlyForecast
+              city={city}
+              loading={loading}
+              days={days}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              hoursForSelectedDay={hoursForSelectedDay}
+            />
+          </div>
+        )}
+      </div>
       <Footer />
     </div>
   );

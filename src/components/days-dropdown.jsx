@@ -83,7 +83,7 @@ export default function DaysDropdown({ days, selected, onSelect }) {
       </div>
       {/* Dropdown menu */}
       {dropdownOpen && (
-        <div className="absolute top-12 right-0 mt-2 w-48 rounded-md shadow-lg bg-primary-600 ring-opacity-5 py-2">
+        <div className="absolute top-12 right-0 mt-2 w-48 rounded-md shadow-lg bg-primary-600 ring-opacity-5 py-2 z-10">
           {days.map((day) => (
             <div
               key={day}
