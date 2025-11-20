@@ -8,6 +8,7 @@ import HourlyForecast from "../components/hourly-forecast";
 import NoResult from "./no-result";
 import ApiError from "./api-error";
 import { COUNTRY_NAMES } from "../components/country-names";
+import Footer from "../components/footer";
 
 export default function Overview() {
   const [city, setCity] = useState("atlanta"); // will be set via geolocation fallback
@@ -336,7 +337,6 @@ export default function Overview() {
     ? Object.entries(weather).map(([element, value]) => ({ element, value }))
     : [];
 
-  console.log(elements);
   /* ------------------- Render ------------------- */
   return (
     <div className="w-full max-w-[650px] mx-auto py-12 px-4 md:px-6 md:max-w-[1220px]">
@@ -378,6 +378,7 @@ export default function Overview() {
           />
         </div>
       )}
+      <Footer />
     </div>
   );
 }
