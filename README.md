@@ -44,6 +44,7 @@ Other Tools:
 - Git
 - React Router
 - Vite
+- Openweathermap API
 
 ## Installation
 
@@ -73,7 +74,7 @@ travely-demo
 └── src
 ├── components
 ├── pages
-├── scss
+├── css
 ├── assets
 ├── utils
 └── App.jsx
